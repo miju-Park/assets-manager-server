@@ -5,6 +5,8 @@ function owner(parent, args, context) {
     }
   }).owner()
 }
+
+
 module.exports = {
   owner
 }

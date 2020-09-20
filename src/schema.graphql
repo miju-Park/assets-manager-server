@@ -4,10 +4,13 @@ type Mutation {
   # post(url:String!, description:String!) : Link!
   signup(email:String!, password:String!, name:String!):AuthPayload
   login(email:String!, password:String!) :AuthPayload
-  deleteUser(id:Int!) :Boolean!
+	addCheckingAccount(type:String!, bank:String!, title:String!, startdate:DateTime!, duedate:DateTime!, balance:Int!, currency:Int):[Assets]!
+  updateAsset(id:Int!, bank:String, title:String, startdate:DateTime, duedate:DateTime, balance:Int, currency:Int):Assets!
+	deleteAsset(id:Int!):Boolean!
+	deleteUser(id:Int!) :Boolean!
 }
 type Query {
-  assets: [Assets!]!
+  assets(filter:String): AssetsResult!
 }
 
 type AuthPayload {
@@ -19,26 +22,25 @@ type User{
   id: ID!
   name: String!
   email: String!
-  assets: Assets
+  assets: [Assets!]!
 }
+
 
 type Assets {
-  id: ID!
-  checkingAccount: [CheckingAccount]
-  owner: User
-}
-
-enum Currency {
-	KR
-	USD
-}
-
-type CheckingAccount {
 	id: ID!
+	type: String!
 	bank: String!
-	name: String
+	title: String
 	startdate: DateTime!
 	duedate: DateTime!
 	balance: Int!
-	currency: Currency
+	currency: Int
+	owner: User
 }
+
+type AssetsResult {
+	list: [Assets!]!
+	total:Int!
+	currency:Int
+}
+

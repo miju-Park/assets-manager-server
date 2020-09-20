@@ -2,10 +2,10 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {
 	APP_SECRET,
-	getUserId
+	getUserId,
+	ASSETS_TYPE,
+	CURRENCY
 } = require('../utils')
-
-
 
 async function signup(parent, args, context, info) {
 	const password = await bcrypt.hash(args.password, 10)
@@ -13,11 +13,6 @@ async function signup(parent, args, context, info) {
 		data: {
 			...args,
 			password,
-			assets: {
-				create: {
-					checkingAccount: []
-				}
-			}
 		}
 	})
 	const token = jwt.sign({
@@ -54,7 +49,6 @@ async function login(parent, args, context, info) {
 }
 
 async function deleteUser(parent, args, context) {
-
 	const user = await context.prisma.user.delete({
 		where: {
 			id: args.id
@@ -65,12 +59,59 @@ async function deleteUser(parent, args, context) {
 			ownerId: null
 		}
 	})
-
-	console.log(user)
 	return !!user;
 }
+
+async function addCheckingAccount(parent, args, context) {
+	const userId = getUserId(context);
+	const assets = await context.prisma.assets.create({
+		data: {
+			type: ASSETS_TYPE.CheckingAccount,
+			bank: args.bank,
+			title: args.title,
+			startdate: args.startdate,
+			duedate: args.duedate,
+			balance: args.balance,
+			currency: args.currency ? args.currency : CURRENCY.KR,
+			owner: {
+				connect: {
+					id: userId
+				}
+			}
+		}
+	})
+	return assets;
+}
+async function deleteAsset(parent, args, context) {
+	const data = await context.prisma.assets.delete({
+		where: {
+			id: args.id
+		}
+	})
+	return !!data;
+}
+
+async function updateAsset(parent, args, context) {
+	let updateBody = {
+		...args
+	};
+	delete updateBody.id
+	const assets = await context.prisma.assets.update({
+		where: {
+			id: args.id
+		},
+		data: {
+			...updateBody
+		}
+	})
+	return assets;
+}
+
 module.exports = {
 	signup,
 	login,
-	deleteUser
+	deleteUser,
+	addCheckingAccount,
+	deleteAsset,
+	updateAsset
 }
