@@ -3,17 +3,483 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateUser {
+/* GraphQL */ `type AggregateAssets {
   count: Int!
+}
+
+type AggregateCheckingAccount {
+  count: Int!
+}
+
+type AggregateUser {
+  count: Int!
+}
+
+type Assets {
+  id: ID!
+  checkingAccount(where: CheckingAccountWhereInput, orderBy: CheckingAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CheckingAccount!]
+  user: User!
+}
+
+type AssetsConnection {
+  pageInfo: PageInfo!
+  edges: [AssetsEdge]!
+  aggregate: AggregateAssets!
+}
+
+input AssetsCreateInput {
+  id: ID
+  checkingAccount: CheckingAccountCreateManyInput
+  user: UserCreateOneWithoutAssetsInput!
+}
+
+input AssetsCreateManyWithoutUserInput {
+  create: [AssetsCreateWithoutUserInput!]
+  connect: [AssetsWhereUniqueInput!]
+}
+
+input AssetsCreateWithoutUserInput {
+  id: ID
+  checkingAccount: CheckingAccountCreateManyInput
+}
+
+type AssetsEdge {
+  node: Assets!
+  cursor: String!
+}
+
+enum AssetsOrderByInput {
+  id_ASC
+  id_DESC
+}
+
+type AssetsPreviousValues {
+  id: ID!
+}
+
+input AssetsScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  AND: [AssetsScalarWhereInput!]
+  OR: [AssetsScalarWhereInput!]
+  NOT: [AssetsScalarWhereInput!]
+}
+
+type AssetsSubscriptionPayload {
+  mutation: MutationType!
+  node: Assets
+  updatedFields: [String!]
+  previousValues: AssetsPreviousValues
+}
+
+input AssetsSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: AssetsWhereInput
+  AND: [AssetsSubscriptionWhereInput!]
+  OR: [AssetsSubscriptionWhereInput!]
+  NOT: [AssetsSubscriptionWhereInput!]
+}
+
+input AssetsUpdateInput {
+  checkingAccount: CheckingAccountUpdateManyInput
+  user: UserUpdateOneRequiredWithoutAssetsInput
+}
+
+input AssetsUpdateManyWithoutUserInput {
+  create: [AssetsCreateWithoutUserInput!]
+  delete: [AssetsWhereUniqueInput!]
+  connect: [AssetsWhereUniqueInput!]
+  set: [AssetsWhereUniqueInput!]
+  disconnect: [AssetsWhereUniqueInput!]
+  update: [AssetsUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [AssetsUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [AssetsScalarWhereInput!]
+}
+
+input AssetsUpdateWithoutUserDataInput {
+  checkingAccount: CheckingAccountUpdateManyInput
+}
+
+input AssetsUpdateWithWhereUniqueWithoutUserInput {
+  where: AssetsWhereUniqueInput!
+  data: AssetsUpdateWithoutUserDataInput!
+}
+
+input AssetsUpsertWithWhereUniqueWithoutUserInput {
+  where: AssetsWhereUniqueInput!
+  update: AssetsUpdateWithoutUserDataInput!
+  create: AssetsCreateWithoutUserInput!
+}
+
+input AssetsWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  checkingAccount_every: CheckingAccountWhereInput
+  checkingAccount_some: CheckingAccountWhereInput
+  checkingAccount_none: CheckingAccountWhereInput
+  user: UserWhereInput
+  AND: [AssetsWhereInput!]
+  OR: [AssetsWhereInput!]
+  NOT: [AssetsWhereInput!]
+}
+
+input AssetsWhereUniqueInput {
+  id: ID
 }
 
 type BatchPayload {
   count: Long!
 }
 
+type CheckingAccount {
+  id: ID!
+  bank: String!
+  name: String
+  startdate: DateTime!
+  duedate: DateTime!
+  balance: Int!
+  currency: Currency
+}
+
+type CheckingAccountConnection {
+  pageInfo: PageInfo!
+  edges: [CheckingAccountEdge]!
+  aggregate: AggregateCheckingAccount!
+}
+
+input CheckingAccountCreateInput {
+  id: ID
+  bank: String!
+  name: String
+  startdate: DateTime!
+  duedate: DateTime!
+  balance: Int!
+  currency: Currency
+}
+
+input CheckingAccountCreateManyInput {
+  create: [CheckingAccountCreateInput!]
+  connect: [CheckingAccountWhereUniqueInput!]
+}
+
+type CheckingAccountEdge {
+  node: CheckingAccount!
+  cursor: String!
+}
+
+enum CheckingAccountOrderByInput {
+  id_ASC
+  id_DESC
+  bank_ASC
+  bank_DESC
+  name_ASC
+  name_DESC
+  startdate_ASC
+  startdate_DESC
+  duedate_ASC
+  duedate_DESC
+  balance_ASC
+  balance_DESC
+  currency_ASC
+  currency_DESC
+}
+
+type CheckingAccountPreviousValues {
+  id: ID!
+  bank: String!
+  name: String
+  startdate: DateTime!
+  duedate: DateTime!
+  balance: Int!
+  currency: Currency
+}
+
+input CheckingAccountScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  bank: String
+  bank_not: String
+  bank_in: [String!]
+  bank_not_in: [String!]
+  bank_lt: String
+  bank_lte: String
+  bank_gt: String
+  bank_gte: String
+  bank_contains: String
+  bank_not_contains: String
+  bank_starts_with: String
+  bank_not_starts_with: String
+  bank_ends_with: String
+  bank_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  startdate: DateTime
+  startdate_not: DateTime
+  startdate_in: [DateTime!]
+  startdate_not_in: [DateTime!]
+  startdate_lt: DateTime
+  startdate_lte: DateTime
+  startdate_gt: DateTime
+  startdate_gte: DateTime
+  duedate: DateTime
+  duedate_not: DateTime
+  duedate_in: [DateTime!]
+  duedate_not_in: [DateTime!]
+  duedate_lt: DateTime
+  duedate_lte: DateTime
+  duedate_gt: DateTime
+  duedate_gte: DateTime
+  balance: Int
+  balance_not: Int
+  balance_in: [Int!]
+  balance_not_in: [Int!]
+  balance_lt: Int
+  balance_lte: Int
+  balance_gt: Int
+  balance_gte: Int
+  currency: Currency
+  currency_not: Currency
+  currency_in: [Currency!]
+  currency_not_in: [Currency!]
+  AND: [CheckingAccountScalarWhereInput!]
+  OR: [CheckingAccountScalarWhereInput!]
+  NOT: [CheckingAccountScalarWhereInput!]
+}
+
+type CheckingAccountSubscriptionPayload {
+  mutation: MutationType!
+  node: CheckingAccount
+  updatedFields: [String!]
+  previousValues: CheckingAccountPreviousValues
+}
+
+input CheckingAccountSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: CheckingAccountWhereInput
+  AND: [CheckingAccountSubscriptionWhereInput!]
+  OR: [CheckingAccountSubscriptionWhereInput!]
+  NOT: [CheckingAccountSubscriptionWhereInput!]
+}
+
+input CheckingAccountUpdateDataInput {
+  bank: String
+  name: String
+  startdate: DateTime
+  duedate: DateTime
+  balance: Int
+  currency: Currency
+}
+
+input CheckingAccountUpdateInput {
+  bank: String
+  name: String
+  startdate: DateTime
+  duedate: DateTime
+  balance: Int
+  currency: Currency
+}
+
+input CheckingAccountUpdateManyDataInput {
+  bank: String
+  name: String
+  startdate: DateTime
+  duedate: DateTime
+  balance: Int
+  currency: Currency
+}
+
+input CheckingAccountUpdateManyInput {
+  create: [CheckingAccountCreateInput!]
+  update: [CheckingAccountUpdateWithWhereUniqueNestedInput!]
+  upsert: [CheckingAccountUpsertWithWhereUniqueNestedInput!]
+  delete: [CheckingAccountWhereUniqueInput!]
+  connect: [CheckingAccountWhereUniqueInput!]
+  set: [CheckingAccountWhereUniqueInput!]
+  disconnect: [CheckingAccountWhereUniqueInput!]
+  deleteMany: [CheckingAccountScalarWhereInput!]
+  updateMany: [CheckingAccountUpdateManyWithWhereNestedInput!]
+}
+
+input CheckingAccountUpdateManyMutationInput {
+  bank: String
+  name: String
+  startdate: DateTime
+  duedate: DateTime
+  balance: Int
+  currency: Currency
+}
+
+input CheckingAccountUpdateManyWithWhereNestedInput {
+  where: CheckingAccountScalarWhereInput!
+  data: CheckingAccountUpdateManyDataInput!
+}
+
+input CheckingAccountUpdateWithWhereUniqueNestedInput {
+  where: CheckingAccountWhereUniqueInput!
+  data: CheckingAccountUpdateDataInput!
+}
+
+input CheckingAccountUpsertWithWhereUniqueNestedInput {
+  where: CheckingAccountWhereUniqueInput!
+  update: CheckingAccountUpdateDataInput!
+  create: CheckingAccountCreateInput!
+}
+
+input CheckingAccountWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  bank: String
+  bank_not: String
+  bank_in: [String!]
+  bank_not_in: [String!]
+  bank_lt: String
+  bank_lte: String
+  bank_gt: String
+  bank_gte: String
+  bank_contains: String
+  bank_not_contains: String
+  bank_starts_with: String
+  bank_not_starts_with: String
+  bank_ends_with: String
+  bank_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  startdate: DateTime
+  startdate_not: DateTime
+  startdate_in: [DateTime!]
+  startdate_not_in: [DateTime!]
+  startdate_lt: DateTime
+  startdate_lte: DateTime
+  startdate_gt: DateTime
+  startdate_gte: DateTime
+  duedate: DateTime
+  duedate_not: DateTime
+  duedate_in: [DateTime!]
+  duedate_not_in: [DateTime!]
+  duedate_lt: DateTime
+  duedate_lte: DateTime
+  duedate_gt: DateTime
+  duedate_gte: DateTime
+  balance: Int
+  balance_not: Int
+  balance_in: [Int!]
+  balance_not_in: [Int!]
+  balance_lt: Int
+  balance_lte: Int
+  balance_gt: Int
+  balance_gte: Int
+  currency: Currency
+  currency_not: Currency
+  currency_in: [Currency!]
+  currency_not_in: [Currency!]
+  AND: [CheckingAccountWhereInput!]
+  OR: [CheckingAccountWhereInput!]
+  NOT: [CheckingAccountWhereInput!]
+}
+
+input CheckingAccountWhereUniqueInput {
+  id: ID
+}
+
+enum Currency {
+  KR
+  USD
+}
+
+scalar DateTime
+
 scalar Long
 
 type Mutation {
+  createAssets(data: AssetsCreateInput!): Assets!
+  updateAssets(data: AssetsUpdateInput!, where: AssetsWhereUniqueInput!): Assets
+  upsertAssets(where: AssetsWhereUniqueInput!, create: AssetsCreateInput!, update: AssetsUpdateInput!): Assets!
+  deleteAssets(where: AssetsWhereUniqueInput!): Assets
+  deleteManyAssetses(where: AssetsWhereInput): BatchPayload!
+  createCheckingAccount(data: CheckingAccountCreateInput!): CheckingAccount!
+  updateCheckingAccount(data: CheckingAccountUpdateInput!, where: CheckingAccountWhereUniqueInput!): CheckingAccount
+  updateManyCheckingAccounts(data: CheckingAccountUpdateManyMutationInput!, where: CheckingAccountWhereInput): BatchPayload!
+  upsertCheckingAccount(where: CheckingAccountWhereUniqueInput!, create: CheckingAccountCreateInput!, update: CheckingAccountUpdateInput!): CheckingAccount!
+  deleteCheckingAccount(where: CheckingAccountWhereUniqueInput!): CheckingAccount
+  deleteManyCheckingAccounts(where: CheckingAccountWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -40,6 +506,12 @@ type PageInfo {
 }
 
 type Query {
+  assets(where: AssetsWhereUniqueInput!): Assets
+  assetses(where: AssetsWhereInput, orderBy: AssetsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Assets]!
+  assetsesConnection(where: AssetsWhereInput, orderBy: AssetsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AssetsConnection!
+  checkingAccount(where: CheckingAccountWhereUniqueInput!): CheckingAccount
+  checkingAccounts(where: CheckingAccountWhereInput, orderBy: CheckingAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CheckingAccount]!
+  checkingAccountsConnection(where: CheckingAccountWhereInput, orderBy: CheckingAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CheckingAccountConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -47,6 +519,8 @@ type Query {
 }
 
 type Subscription {
+  assets(where: AssetsSubscriptionWhereInput): AssetsSubscriptionPayload
+  checkingAccount(where: CheckingAccountSubscriptionWhereInput): CheckingAccountSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -55,6 +529,7 @@ type User {
   name: String!
   email: String!
   password: String!
+  assets(where: AssetsWhereInput, orderBy: AssetsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Assets!]
 }
 
 type UserConnection {
@@ -64,6 +539,19 @@ type UserConnection {
 }
 
 input UserCreateInput {
+  id: ID
+  name: String!
+  email: String!
+  password: String!
+  assets: AssetsCreateManyWithoutUserInput
+}
+
+input UserCreateOneWithoutAssetsInput {
+  create: UserCreateWithoutAssetsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutAssetsInput {
   id: ID
   name: String!
   email: String!
@@ -115,12 +603,31 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  assets: AssetsUpdateManyWithoutUserInput
 }
 
 input UserUpdateManyMutationInput {
   name: String
   email: String
   password: String
+}
+
+input UserUpdateOneRequiredWithoutAssetsInput {
+  create: UserCreateWithoutAssetsInput
+  update: UserUpdateWithoutAssetsDataInput
+  upsert: UserUpsertWithoutAssetsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutAssetsDataInput {
+  name: String
+  email: String
+  password: String
+}
+
+input UserUpsertWithoutAssetsInput {
+  update: UserUpdateWithoutAssetsDataInput!
+  create: UserCreateWithoutAssetsInput!
 }
 
 input UserWhereInput {
@@ -180,6 +687,9 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
+  assets_every: AssetsWhereInput
+  assets_some: AssetsWhereInput
+  assets_none: AssetsWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

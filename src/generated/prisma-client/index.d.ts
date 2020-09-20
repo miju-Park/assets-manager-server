@@ -16,6 +16,8 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
+  assets: (where?: AssetsWhereInput) => Promise<boolean>;
+  checkingAccount: (where?: CheckingAccountWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
 
@@ -38,6 +40,46 @@ export interface Prisma {
    * Queries
    */
 
+  assets: (where: AssetsWhereUniqueInput) => AssetsNullablePromise;
+  assetses: (args?: {
+    where?: AssetsWhereInput;
+    orderBy?: AssetsOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Assets>;
+  assetsesConnection: (args?: {
+    where?: AssetsWhereInput;
+    orderBy?: AssetsOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => AssetsConnectionPromise;
+  checkingAccount: (
+    where: CheckingAccountWhereUniqueInput
+  ) => CheckingAccountNullablePromise;
+  checkingAccounts: (args?: {
+    where?: CheckingAccountWhereInput;
+    orderBy?: CheckingAccountOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<CheckingAccount>;
+  checkingAccountsConnection: (args?: {
+    where?: CheckingAccountWhereInput;
+    orderBy?: CheckingAccountOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => CheckingAccountConnectionPromise;
   user: (where: UserWhereUniqueInput) => UserNullablePromise;
   users: (args?: {
     where?: UserWhereInput;
@@ -63,6 +105,40 @@ export interface Prisma {
    * Mutations
    */
 
+  createAssets: (data: AssetsCreateInput) => AssetsPromise;
+  updateAssets: (args: {
+    data: AssetsUpdateInput;
+    where: AssetsWhereUniqueInput;
+  }) => AssetsPromise;
+  upsertAssets: (args: {
+    where: AssetsWhereUniqueInput;
+    create: AssetsCreateInput;
+    update: AssetsUpdateInput;
+  }) => AssetsPromise;
+  deleteAssets: (where: AssetsWhereUniqueInput) => AssetsPromise;
+  deleteManyAssetses: (where?: AssetsWhereInput) => BatchPayloadPromise;
+  createCheckingAccount: (
+    data: CheckingAccountCreateInput
+  ) => CheckingAccountPromise;
+  updateCheckingAccount: (args: {
+    data: CheckingAccountUpdateInput;
+    where: CheckingAccountWhereUniqueInput;
+  }) => CheckingAccountPromise;
+  updateManyCheckingAccounts: (args: {
+    data: CheckingAccountUpdateManyMutationInput;
+    where?: CheckingAccountWhereInput;
+  }) => BatchPayloadPromise;
+  upsertCheckingAccount: (args: {
+    where: CheckingAccountWhereUniqueInput;
+    create: CheckingAccountCreateInput;
+    update: CheckingAccountUpdateInput;
+  }) => CheckingAccountPromise;
+  deleteCheckingAccount: (
+    where: CheckingAccountWhereUniqueInput
+  ) => CheckingAccountPromise;
+  deleteManyCheckingAccounts: (
+    where?: CheckingAccountWhereInput
+  ) => BatchPayloadPromise;
   createUser: (data: UserCreateInput) => UserPromise;
   updateUser: (args: {
     data: UserUpdateInput;
@@ -88,6 +164,12 @@ export interface Prisma {
 }
 
 export interface Subscription {
+  assets: (
+    where?: AssetsSubscriptionWhereInput
+  ) => AssetsSubscriptionPayloadSubscription;
+  checkingAccount: (
+    where?: CheckingAccountSubscriptionWhereInput
+  ) => CheckingAccountSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -101,6 +183,26 @@ export interface ClientConstructor<T> {
  * Types
  */
 
+export type Currency = "KR" | "USD";
+
+export type CheckingAccountOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "bank_ASC"
+  | "bank_DESC"
+  | "name_ASC"
+  | "name_DESC"
+  | "startdate_ASC"
+  | "startdate_DESC"
+  | "duedate_ASC"
+  | "duedate_DESC"
+  | "balance_ASC"
+  | "balance_DESC"
+  | "currency_ASC"
+  | "currency_DESC";
+
+export type AssetsOrderByInput = "id_ASC" | "id_DESC";
+
 export type UserOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -113,10 +215,109 @@ export type UserOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export type UserWhereUniqueInput = AtLeastOne<{
+export type AssetsWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
-  email?: Maybe<String>;
 }>;
+
+export interface CheckingAccountWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  bank?: Maybe<String>;
+  bank_not?: Maybe<String>;
+  bank_in?: Maybe<String[] | String>;
+  bank_not_in?: Maybe<String[] | String>;
+  bank_lt?: Maybe<String>;
+  bank_lte?: Maybe<String>;
+  bank_gt?: Maybe<String>;
+  bank_gte?: Maybe<String>;
+  bank_contains?: Maybe<String>;
+  bank_not_contains?: Maybe<String>;
+  bank_starts_with?: Maybe<String>;
+  bank_not_starts_with?: Maybe<String>;
+  bank_ends_with?: Maybe<String>;
+  bank_not_ends_with?: Maybe<String>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  startdate?: Maybe<DateTimeInput>;
+  startdate_not?: Maybe<DateTimeInput>;
+  startdate_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  startdate_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  startdate_lt?: Maybe<DateTimeInput>;
+  startdate_lte?: Maybe<DateTimeInput>;
+  startdate_gt?: Maybe<DateTimeInput>;
+  startdate_gte?: Maybe<DateTimeInput>;
+  duedate?: Maybe<DateTimeInput>;
+  duedate_not?: Maybe<DateTimeInput>;
+  duedate_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  duedate_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  duedate_lt?: Maybe<DateTimeInput>;
+  duedate_lte?: Maybe<DateTimeInput>;
+  duedate_gt?: Maybe<DateTimeInput>;
+  duedate_gte?: Maybe<DateTimeInput>;
+  balance?: Maybe<Int>;
+  balance_not?: Maybe<Int>;
+  balance_in?: Maybe<Int[] | Int>;
+  balance_not_in?: Maybe<Int[] | Int>;
+  balance_lt?: Maybe<Int>;
+  balance_lte?: Maybe<Int>;
+  balance_gt?: Maybe<Int>;
+  balance_gte?: Maybe<Int>;
+  currency?: Maybe<Currency>;
+  currency_not?: Maybe<Currency>;
+  currency_in?: Maybe<Currency[] | Currency>;
+  currency_not_in?: Maybe<Currency[] | Currency>;
+  AND?: Maybe<CheckingAccountWhereInput[] | CheckingAccountWhereInput>;
+  OR?: Maybe<CheckingAccountWhereInput[] | CheckingAccountWhereInput>;
+  NOT?: Maybe<CheckingAccountWhereInput[] | CheckingAccountWhereInput>;
+}
+
+export interface AssetsWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  checkingAccount_every?: Maybe<CheckingAccountWhereInput>;
+  checkingAccount_some?: Maybe<CheckingAccountWhereInput>;
+  checkingAccount_none?: Maybe<CheckingAccountWhereInput>;
+  user?: Maybe<UserWhereInput>;
+  AND?: Maybe<AssetsWhereInput[] | AssetsWhereInput>;
+  OR?: Maybe<AssetsWhereInput[] | AssetsWhereInput>;
+  NOT?: Maybe<AssetsWhereInput[] | AssetsWhereInput>;
+}
 
 export interface UserWhereInput {
   id?: Maybe<ID_Input>;
@@ -175,9 +376,244 @@ export interface UserWhereInput {
   password_not_starts_with?: Maybe<String>;
   password_ends_with?: Maybe<String>;
   password_not_ends_with?: Maybe<String>;
+  assets_every?: Maybe<AssetsWhereInput>;
+  assets_some?: Maybe<AssetsWhereInput>;
+  assets_none?: Maybe<AssetsWhereInput>;
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
   OR?: Maybe<UserWhereInput[] | UserWhereInput>;
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
+}
+
+export type CheckingAccountWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  email?: Maybe<String>;
+}>;
+
+export interface AssetsCreateInput {
+  id?: Maybe<ID_Input>;
+  checkingAccount?: Maybe<CheckingAccountCreateManyInput>;
+  user: UserCreateOneWithoutAssetsInput;
+}
+
+export interface CheckingAccountCreateManyInput {
+  create?: Maybe<CheckingAccountCreateInput[] | CheckingAccountCreateInput>;
+  connect?: Maybe<
+    CheckingAccountWhereUniqueInput[] | CheckingAccountWhereUniqueInput
+  >;
+}
+
+export interface CheckingAccountCreateInput {
+  id?: Maybe<ID_Input>;
+  bank: String;
+  name?: Maybe<String>;
+  startdate: DateTimeInput;
+  duedate: DateTimeInput;
+  balance: Int;
+  currency?: Maybe<Currency>;
+}
+
+export interface UserCreateOneWithoutAssetsInput {
+  create?: Maybe<UserCreateWithoutAssetsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutAssetsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  email: String;
+  password: String;
+}
+
+export interface AssetsUpdateInput {
+  checkingAccount?: Maybe<CheckingAccountUpdateManyInput>;
+  user?: Maybe<UserUpdateOneRequiredWithoutAssetsInput>;
+}
+
+export interface CheckingAccountUpdateManyInput {
+  create?: Maybe<CheckingAccountCreateInput[] | CheckingAccountCreateInput>;
+  update?: Maybe<
+    | CheckingAccountUpdateWithWhereUniqueNestedInput[]
+    | CheckingAccountUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    | CheckingAccountUpsertWithWhereUniqueNestedInput[]
+    | CheckingAccountUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<
+    CheckingAccountWhereUniqueInput[] | CheckingAccountWhereUniqueInput
+  >;
+  connect?: Maybe<
+    CheckingAccountWhereUniqueInput[] | CheckingAccountWhereUniqueInput
+  >;
+  set?: Maybe<
+    CheckingAccountWhereUniqueInput[] | CheckingAccountWhereUniqueInput
+  >;
+  disconnect?: Maybe<
+    CheckingAccountWhereUniqueInput[] | CheckingAccountWhereUniqueInput
+  >;
+  deleteMany?: Maybe<
+    CheckingAccountScalarWhereInput[] | CheckingAccountScalarWhereInput
+  >;
+  updateMany?: Maybe<
+    | CheckingAccountUpdateManyWithWhereNestedInput[]
+    | CheckingAccountUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface CheckingAccountUpdateWithWhereUniqueNestedInput {
+  where: CheckingAccountWhereUniqueInput;
+  data: CheckingAccountUpdateDataInput;
+}
+
+export interface CheckingAccountUpdateDataInput {
+  bank?: Maybe<String>;
+  name?: Maybe<String>;
+  startdate?: Maybe<DateTimeInput>;
+  duedate?: Maybe<DateTimeInput>;
+  balance?: Maybe<Int>;
+  currency?: Maybe<Currency>;
+}
+
+export interface CheckingAccountUpsertWithWhereUniqueNestedInput {
+  where: CheckingAccountWhereUniqueInput;
+  update: CheckingAccountUpdateDataInput;
+  create: CheckingAccountCreateInput;
+}
+
+export interface CheckingAccountScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  bank?: Maybe<String>;
+  bank_not?: Maybe<String>;
+  bank_in?: Maybe<String[] | String>;
+  bank_not_in?: Maybe<String[] | String>;
+  bank_lt?: Maybe<String>;
+  bank_lte?: Maybe<String>;
+  bank_gt?: Maybe<String>;
+  bank_gte?: Maybe<String>;
+  bank_contains?: Maybe<String>;
+  bank_not_contains?: Maybe<String>;
+  bank_starts_with?: Maybe<String>;
+  bank_not_starts_with?: Maybe<String>;
+  bank_ends_with?: Maybe<String>;
+  bank_not_ends_with?: Maybe<String>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  startdate?: Maybe<DateTimeInput>;
+  startdate_not?: Maybe<DateTimeInput>;
+  startdate_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  startdate_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  startdate_lt?: Maybe<DateTimeInput>;
+  startdate_lte?: Maybe<DateTimeInput>;
+  startdate_gt?: Maybe<DateTimeInput>;
+  startdate_gte?: Maybe<DateTimeInput>;
+  duedate?: Maybe<DateTimeInput>;
+  duedate_not?: Maybe<DateTimeInput>;
+  duedate_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  duedate_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  duedate_lt?: Maybe<DateTimeInput>;
+  duedate_lte?: Maybe<DateTimeInput>;
+  duedate_gt?: Maybe<DateTimeInput>;
+  duedate_gte?: Maybe<DateTimeInput>;
+  balance?: Maybe<Int>;
+  balance_not?: Maybe<Int>;
+  balance_in?: Maybe<Int[] | Int>;
+  balance_not_in?: Maybe<Int[] | Int>;
+  balance_lt?: Maybe<Int>;
+  balance_lte?: Maybe<Int>;
+  balance_gt?: Maybe<Int>;
+  balance_gte?: Maybe<Int>;
+  currency?: Maybe<Currency>;
+  currency_not?: Maybe<Currency>;
+  currency_in?: Maybe<Currency[] | Currency>;
+  currency_not_in?: Maybe<Currency[] | Currency>;
+  AND?: Maybe<
+    CheckingAccountScalarWhereInput[] | CheckingAccountScalarWhereInput
+  >;
+  OR?: Maybe<
+    CheckingAccountScalarWhereInput[] | CheckingAccountScalarWhereInput
+  >;
+  NOT?: Maybe<
+    CheckingAccountScalarWhereInput[] | CheckingAccountScalarWhereInput
+  >;
+}
+
+export interface CheckingAccountUpdateManyWithWhereNestedInput {
+  where: CheckingAccountScalarWhereInput;
+  data: CheckingAccountUpdateManyDataInput;
+}
+
+export interface CheckingAccountUpdateManyDataInput {
+  bank?: Maybe<String>;
+  name?: Maybe<String>;
+  startdate?: Maybe<DateTimeInput>;
+  duedate?: Maybe<DateTimeInput>;
+  balance?: Maybe<Int>;
+  currency?: Maybe<Currency>;
+}
+
+export interface UserUpdateOneRequiredWithoutAssetsInput {
+  create?: Maybe<UserCreateWithoutAssetsInput>;
+  update?: Maybe<UserUpdateWithoutAssetsDataInput>;
+  upsert?: Maybe<UserUpsertWithoutAssetsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserUpdateWithoutAssetsDataInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+}
+
+export interface UserUpsertWithoutAssetsInput {
+  update: UserUpdateWithoutAssetsDataInput;
+  create: UserCreateWithoutAssetsInput;
+}
+
+export interface CheckingAccountUpdateInput {
+  bank?: Maybe<String>;
+  name?: Maybe<String>;
+  startdate?: Maybe<DateTimeInput>;
+  duedate?: Maybe<DateTimeInput>;
+  balance?: Maybe<Int>;
+  currency?: Maybe<Currency>;
+}
+
+export interface CheckingAccountUpdateManyMutationInput {
+  bank?: Maybe<String>;
+  name?: Maybe<String>;
+  startdate?: Maybe<DateTimeInput>;
+  duedate?: Maybe<DateTimeInput>;
+  balance?: Maybe<Int>;
+  currency?: Maybe<Currency>;
 }
 
 export interface UserCreateInput {
@@ -185,18 +621,113 @@ export interface UserCreateInput {
   name: String;
   email: String;
   password: String;
+  assets?: Maybe<AssetsCreateManyWithoutUserInput>;
+}
+
+export interface AssetsCreateManyWithoutUserInput {
+  create?: Maybe<AssetsCreateWithoutUserInput[] | AssetsCreateWithoutUserInput>;
+  connect?: Maybe<AssetsWhereUniqueInput[] | AssetsWhereUniqueInput>;
+}
+
+export interface AssetsCreateWithoutUserInput {
+  id?: Maybe<ID_Input>;
+  checkingAccount?: Maybe<CheckingAccountCreateManyInput>;
 }
 
 export interface UserUpdateInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
+  assets?: Maybe<AssetsUpdateManyWithoutUserInput>;
+}
+
+export interface AssetsUpdateManyWithoutUserInput {
+  create?: Maybe<AssetsCreateWithoutUserInput[] | AssetsCreateWithoutUserInput>;
+  delete?: Maybe<AssetsWhereUniqueInput[] | AssetsWhereUniqueInput>;
+  connect?: Maybe<AssetsWhereUniqueInput[] | AssetsWhereUniqueInput>;
+  set?: Maybe<AssetsWhereUniqueInput[] | AssetsWhereUniqueInput>;
+  disconnect?: Maybe<AssetsWhereUniqueInput[] | AssetsWhereUniqueInput>;
+  update?: Maybe<
+    | AssetsUpdateWithWhereUniqueWithoutUserInput[]
+    | AssetsUpdateWithWhereUniqueWithoutUserInput
+  >;
+  upsert?: Maybe<
+    | AssetsUpsertWithWhereUniqueWithoutUserInput[]
+    | AssetsUpsertWithWhereUniqueWithoutUserInput
+  >;
+  deleteMany?: Maybe<AssetsScalarWhereInput[] | AssetsScalarWhereInput>;
+}
+
+export interface AssetsUpdateWithWhereUniqueWithoutUserInput {
+  where: AssetsWhereUniqueInput;
+  data: AssetsUpdateWithoutUserDataInput;
+}
+
+export interface AssetsUpdateWithoutUserDataInput {
+  checkingAccount?: Maybe<CheckingAccountUpdateManyInput>;
+}
+
+export interface AssetsUpsertWithWhereUniqueWithoutUserInput {
+  where: AssetsWhereUniqueInput;
+  update: AssetsUpdateWithoutUserDataInput;
+  create: AssetsCreateWithoutUserInput;
+}
+
+export interface AssetsScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  AND?: Maybe<AssetsScalarWhereInput[] | AssetsScalarWhereInput>;
+  OR?: Maybe<AssetsScalarWhereInput[] | AssetsScalarWhereInput>;
+  NOT?: Maybe<AssetsScalarWhereInput[] | AssetsScalarWhereInput>;
 }
 
 export interface UserUpdateManyMutationInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
+}
+
+export interface AssetsSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<AssetsWhereInput>;
+  AND?: Maybe<AssetsSubscriptionWhereInput[] | AssetsSubscriptionWhereInput>;
+  OR?: Maybe<AssetsSubscriptionWhereInput[] | AssetsSubscriptionWhereInput>;
+  NOT?: Maybe<AssetsSubscriptionWhereInput[] | AssetsSubscriptionWhereInput>;
+}
+
+export interface CheckingAccountSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<CheckingAccountWhereInput>;
+  AND?: Maybe<
+    | CheckingAccountSubscriptionWhereInput[]
+    | CheckingAccountSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    | CheckingAccountSubscriptionWhereInput[]
+    | CheckingAccountSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    | CheckingAccountSubscriptionWhereInput[]
+    | CheckingAccountSubscriptionWhereInput
+  >;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -214,6 +745,104 @@ export interface NodeNode {
   id: ID_Output;
 }
 
+export interface Assets {
+  id: ID_Output;
+}
+
+export interface AssetsPromise extends Promise<Assets>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  checkingAccount: <T = FragmentableArray<CheckingAccount>>(args?: {
+    where?: CheckingAccountWhereInput;
+    orderBy?: CheckingAccountOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  user: <T = UserPromise>() => T;
+}
+
+export interface AssetsSubscription
+  extends Promise<AsyncIterator<Assets>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  checkingAccount: <
+    T = Promise<AsyncIterator<CheckingAccountSubscription>>
+  >(args?: {
+    where?: CheckingAccountWhereInput;
+    orderBy?: CheckingAccountOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  user: <T = UserSubscription>() => T;
+}
+
+export interface AssetsNullablePromise
+  extends Promise<Assets | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  checkingAccount: <T = FragmentableArray<CheckingAccount>>(args?: {
+    where?: CheckingAccountWhereInput;
+    orderBy?: CheckingAccountOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  user: <T = UserPromise>() => T;
+}
+
+export interface CheckingAccount {
+  id: ID_Output;
+  bank: String;
+  name?: String;
+  startdate: DateTimeOutput;
+  duedate: DateTimeOutput;
+  balance: Int;
+  currency?: Currency;
+}
+
+export interface CheckingAccountPromise
+  extends Promise<CheckingAccount>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  bank: () => Promise<String>;
+  name: () => Promise<String>;
+  startdate: () => Promise<DateTimeOutput>;
+  duedate: () => Promise<DateTimeOutput>;
+  balance: () => Promise<Int>;
+  currency: () => Promise<Currency>;
+}
+
+export interface CheckingAccountSubscription
+  extends Promise<AsyncIterator<CheckingAccount>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  bank: () => Promise<AsyncIterator<String>>;
+  name: () => Promise<AsyncIterator<String>>;
+  startdate: () => Promise<AsyncIterator<DateTimeOutput>>;
+  duedate: () => Promise<AsyncIterator<DateTimeOutput>>;
+  balance: () => Promise<AsyncIterator<Int>>;
+  currency: () => Promise<AsyncIterator<Currency>>;
+}
+
+export interface CheckingAccountNullablePromise
+  extends Promise<CheckingAccount | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  bank: () => Promise<String>;
+  name: () => Promise<String>;
+  startdate: () => Promise<DateTimeOutput>;
+  duedate: () => Promise<DateTimeOutput>;
+  balance: () => Promise<Int>;
+  currency: () => Promise<Currency>;
+}
+
 export interface User {
   id: ID_Output;
   name: String;
@@ -226,6 +855,15 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   name: () => Promise<String>;
   email: () => Promise<String>;
   password: () => Promise<String>;
+  assets: <T = FragmentableArray<Assets>>(args?: {
+    where?: AssetsWhereInput;
+    orderBy?: AssetsOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface UserSubscription
@@ -235,6 +873,15 @@ export interface UserSubscription
   name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
+  assets: <T = Promise<AsyncIterator<AssetsSubscription>>>(args?: {
+    where?: AssetsWhereInput;
+    orderBy?: AssetsOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface UserNullablePromise
@@ -244,27 +891,36 @@ export interface UserNullablePromise
   name: () => Promise<String>;
   email: () => Promise<String>;
   password: () => Promise<String>;
+  assets: <T = FragmentableArray<Assets>>(args?: {
+    where?: AssetsWhereInput;
+    orderBy?: AssetsOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
-export interface UserConnection {
+export interface AssetsConnection {
   pageInfo: PageInfo;
-  edges: UserEdge[];
+  edges: AssetsEdge[];
 }
 
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
+export interface AssetsConnectionPromise
+  extends Promise<AssetsConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
+  edges: <T = FragmentableArray<AssetsEdge>>() => T;
+  aggregate: <T = AggregateAssetsPromise>() => T;
 }
 
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
+export interface AssetsConnectionSubscription
+  extends Promise<AsyncIterator<AssetsConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<AssetsEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateAssetsSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -288,6 +944,116 @@ export interface PageInfoSubscription
   hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
   startCursor: () => Promise<AsyncIterator<String>>;
   endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AssetsEdge {
+  node: Assets;
+  cursor: String;
+}
+
+export interface AssetsEdgePromise extends Promise<AssetsEdge>, Fragmentable {
+  node: <T = AssetsPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface AssetsEdgeSubscription
+  extends Promise<AsyncIterator<AssetsEdge>>,
+    Fragmentable {
+  node: <T = AssetsSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateAssets {
+  count: Int;
+}
+
+export interface AggregateAssetsPromise
+  extends Promise<AggregateAssets>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateAssetsSubscription
+  extends Promise<AsyncIterator<AggregateAssets>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface CheckingAccountConnection {
+  pageInfo: PageInfo;
+  edges: CheckingAccountEdge[];
+}
+
+export interface CheckingAccountConnectionPromise
+  extends Promise<CheckingAccountConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<CheckingAccountEdge>>() => T;
+  aggregate: <T = AggregateCheckingAccountPromise>() => T;
+}
+
+export interface CheckingAccountConnectionSubscription
+  extends Promise<AsyncIterator<CheckingAccountConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<CheckingAccountEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateCheckingAccountSubscription>() => T;
+}
+
+export interface CheckingAccountEdge {
+  node: CheckingAccount;
+  cursor: String;
+}
+
+export interface CheckingAccountEdgePromise
+  extends Promise<CheckingAccountEdge>,
+    Fragmentable {
+  node: <T = CheckingAccountPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CheckingAccountEdgeSubscription
+  extends Promise<AsyncIterator<CheckingAccountEdge>>,
+    Fragmentable {
+  node: <T = CheckingAccountSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateCheckingAccount {
+  count: Int;
+}
+
+export interface AggregateCheckingAccountPromise
+  extends Promise<AggregateCheckingAccount>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCheckingAccountSubscription
+  extends Promise<AsyncIterator<AggregateCheckingAccount>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
+}
+
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
+}
+
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
 }
 
 export interface UserEdge {
@@ -337,6 +1103,106 @@ export interface BatchPayloadSubscription
   extends Promise<AsyncIterator<BatchPayload>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface AssetsSubscriptionPayload {
+  mutation: MutationType;
+  node: Assets;
+  updatedFields: String[];
+  previousValues: AssetsPreviousValues;
+}
+
+export interface AssetsSubscriptionPayloadPromise
+  extends Promise<AssetsSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = AssetsPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = AssetsPreviousValuesPromise>() => T;
+}
+
+export interface AssetsSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<AssetsSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = AssetsSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = AssetsPreviousValuesSubscription>() => T;
+}
+
+export interface AssetsPreviousValues {
+  id: ID_Output;
+}
+
+export interface AssetsPreviousValuesPromise
+  extends Promise<AssetsPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+}
+
+export interface AssetsPreviousValuesSubscription
+  extends Promise<AsyncIterator<AssetsPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+}
+
+export interface CheckingAccountSubscriptionPayload {
+  mutation: MutationType;
+  node: CheckingAccount;
+  updatedFields: String[];
+  previousValues: CheckingAccountPreviousValues;
+}
+
+export interface CheckingAccountSubscriptionPayloadPromise
+  extends Promise<CheckingAccountSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = CheckingAccountPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = CheckingAccountPreviousValuesPromise>() => T;
+}
+
+export interface CheckingAccountSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<CheckingAccountSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = CheckingAccountSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = CheckingAccountPreviousValuesSubscription>() => T;
+}
+
+export interface CheckingAccountPreviousValues {
+  id: ID_Output;
+  bank: String;
+  name?: String;
+  startdate: DateTimeOutput;
+  duedate: DateTimeOutput;
+  balance: Int;
+  currency?: Currency;
+}
+
+export interface CheckingAccountPreviousValuesPromise
+  extends Promise<CheckingAccountPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  bank: () => Promise<String>;
+  name: () => Promise<String>;
+  startdate: () => Promise<DateTimeOutput>;
+  duedate: () => Promise<DateTimeOutput>;
+  balance: () => Promise<Int>;
+  currency: () => Promise<Currency>;
+}
+
+export interface CheckingAccountPreviousValuesSubscription
+  extends Promise<AsyncIterator<CheckingAccountPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  bank: () => Promise<AsyncIterator<String>>;
+  name: () => Promise<AsyncIterator<String>>;
+  startdate: () => Promise<AsyncIterator<DateTimeOutput>>;
+  duedate: () => Promise<AsyncIterator<DateTimeOutput>>;
+  balance: () => Promise<AsyncIterator<Int>>;
+  currency: () => Promise<AsyncIterator<Currency>>;
 }
 
 export interface UserSubscriptionPayload {
@@ -401,6 +1267,16 @@ The `String` scalar type represents textual data, represented as UTF-8 character
 export type String = string;
 
 /*
+DateTime scalar input type, allowing Date
+*/
+export type DateTimeInput = Date | string;
+
+/*
+DateTime scalar output type, which is always a string
+*/
+export type DateTimeOutput = string;
+
+/*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
 export type Int = number;
@@ -419,6 +1295,18 @@ export type Long = string;
 export const models: Model[] = [
   {
     name: "User",
+    embedded: false
+  },
+  {
+    name: "Assets",
+    embedded: false
+  },
+  {
+    name: "Currency",
+    embedded: false
+  },
+  {
+    name: "CheckingAccount",
     embedded: false
   }
 ];

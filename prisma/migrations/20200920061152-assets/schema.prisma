@@ -1,0 +1,31 @@
+datasource db{
+  provider = "sqlite"
+  url = "***"
+}
+generator client {
+  provider = "prisma-client-js"
+}
+model Assets {
+  id  Int @id @default(autoincrement())
+  checkingAccount CheckingAccount[]
+  owner  User?  @relation(fields:[ownerId], references:[id])
+  ownerId  Int?
+}
+
+model User {
+  id  Int @id @default(autoincrement())
+  name  String
+  email String  @unique
+  password  String
+  assets Assets
+}
+
+model CheckingAccount {
+	id Int @id
+	bank String
+	name String
+	startdate DateTime
+	duedate DateTime
+	balance Int
+	currency Int
+}

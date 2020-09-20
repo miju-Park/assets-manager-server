@@ -1,7 +1,6 @@
-async function users(parent, args, context) {
-	return context.prisma.users();
+function assets(parent, args, context, info) {
+	return context.prisma.assets.findMany();
 }
-
 module.exports = {
-	users
-};
+	assets
+}
