@@ -1,0 +1,23 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "UpdateField",
+      "model": "Assets",
+      "field": "balance",
+      "type": "Float"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "Assets",
+      "field": "currentPrice",
+      "type": "Float"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "Assets",
+      "field": "averagePrice",
+      "type": "Float"
+    }
+  ]
+}

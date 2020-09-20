@@ -1,6 +1,6 @@
 datasource db{
   provider = "sqlite"
-  url = "file:./dev.db"
+  url = "***"
 }
 generator client {
   provider = "prisma-client-js"
@@ -23,12 +23,12 @@ model Assets {
 	duedate DateTime
   initialDeposit Int @default(0)
   payment Int @default(0)
-	balance Float @default(0)
+	balance Int @default(0)
 	currency Int
   ticker String @default("")
   count Int @default(0)
-  currentPrice Float @default(0)
-  averagePrice Float @default(0)
+  currentPrice Int @default(0)
+  averagePrice Int @default(0)
   owner User? @relation(fields:[ownerId], references:[id])
   ownerId  Int?
 }

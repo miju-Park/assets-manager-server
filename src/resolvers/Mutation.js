@@ -5,7 +5,9 @@ const {
 	getUserId,
 	ASSETS_TYPE,
 	CURRENCY,
-	getSavingAccountBalance
+	getSavingAccountBalance,
+	getCurrentUSStockPrice,
+	getStockBalance
 } = require('../utils')
 
 async function signup(parent, args, context, info) {
@@ -71,16 +73,35 @@ async function createAsset(parent, args, context) {
 		title: args.title,
 		startdate: args.startdate,
 		duedate: args.duedate,
-		currency: args.currency ? args.currency : CURRENCY.KR,
-		payment: args.payment,
-		initialDeposit: args.initialDeposit
 	}
 	if (args.type === ASSETS_TYPE.CheckingAccount) {
-		assetInfo.balance = args.balance;
+		assetInfo = {
+			...assetInfo,
+			currency: args.currency ? args.currency : CURRENCY.KR,
+			balance: args.balance
+		}
+
 	} else if (args.type === ASSETS_TYPE.SavingAccount) {
-		assetInfo.balance =
-			getSavingAccountBalance(args.startdate, args.duedate, args.initialDeposit, args.payment);
+		assetInfo = {
+			...assetInfo,
+			currency: args.currency ? args.currency : CURRENCY.KR,
+			payment: args.payment,
+			initialDeposit: args.initialDeposit,
+			balance: getSavingAccountBalance(args.startdate, args.duedate, args.initialDeposit, args.payment)
+		}
+	} else if (args.type === ASSETS_TYPE.USDStock) {
+		const price = await getCurrentUSStockPrice(args.ticker)
+		assetInfo = {
+			...assetInfo,
+			currency: CURRENCY.USD,
+			count: args.count,
+			ticker: args.ticker,
+			currentPrice: price,
+			averagePrice: args.averagePrice,
+			balance: getStockBalance(price, args.count)
+		}
 	}
+	console.log(assetInfo)
 	const assets = await context.prisma.assets.create({
 		data: {
 			...assetInfo,

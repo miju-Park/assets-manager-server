@@ -6,8 +6,9 @@ type Mutation {
   login(email:String!, password:String!) :AuthPayload
 	createAsset(
 		type:String!, bank:String!, title:String!, 
-		startdate:DateTime!, duedate:DateTime!, balance:Int,
-		payment: Int, initialDeposit:Int, currency:Int):Assets!
+		startdate:DateTime!, duedate:DateTime!, balance:Float,
+		payment: Int, initialDeposit:Int, currency:Int,
+		count:Int, ticker:String, averagePrice:Float):Assets!
   updateAsset(id:Int!, bank:String, title:String, 
 		startdate:DateTime, duedate:DateTime, balance:Int, 
 		currency:Int, initialDeposit:Int, payment:Int):Assets!
@@ -38,10 +39,14 @@ type Assets {
 	title: String
 	startdate: DateTime!
 	duedate: DateTime!
-	balance: Int
+	balance: Float
 	payment: Int
 	initialDeposit: Int
 	currency: Int
+	ticker: String
+	count: Int
+	currentPrice: Float
+	averagePrice: Float
 	owner: User
 }
 
