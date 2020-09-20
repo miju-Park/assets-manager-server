@@ -4,7 +4,8 @@ const {
 	APP_SECRET,
 	getUserId,
 	ASSETS_TYPE,
-	CURRENCY
+	CURRENCY,
+	getSavingAccountBalance
 } = require('../utils')
 
 async function signup(parent, args, context, info) {
@@ -62,17 +63,27 @@ async function deleteUser(parent, args, context) {
 	return !!user;
 }
 
-async function addCheckingAccount(parent, args, context) {
+async function createAsset(parent, args, context) {
 	const userId = getUserId(context);
+	let assetInfo = {
+		type: args.type,
+		bank: args.bank,
+		title: args.title,
+		startdate: args.startdate,
+		duedate: args.duedate,
+		currency: args.currency ? args.currency : CURRENCY.KR,
+		payment: args.payment,
+		initialDeposit: args.initialDeposit
+	}
+	if (args.type === ASSETS_TYPE.CheckingAccount) {
+		assetInfo.balance = args.balance;
+	} else if (args.type === ASSETS_TYPE.SavingAccount) {
+		assetInfo.balance =
+			getSavingAccountBalance(args.startdate, args.duedate, args.initialDeposit, args.payment);
+	}
 	const assets = await context.prisma.assets.create({
 		data: {
-			type: ASSETS_TYPE.CheckingAccount,
-			bank: args.bank,
-			title: args.title,
-			startdate: args.startdate,
-			duedate: args.duedate,
-			balance: args.balance,
-			currency: args.currency ? args.currency : CURRENCY.KR,
+			...assetInfo,
 			owner: {
 				connect: {
 					id: userId
@@ -92,10 +103,24 @@ async function deleteAsset(parent, args, context) {
 }
 
 async function updateAsset(parent, args, context) {
+	const target = await context.prisma.assets.findOne({
+		where: {
+			id: args.id
+		}
+	})
 	let updateBody = {
+		...target,
 		...args
-	};
-	delete updateBody.id
+	}
+	delete updateBody.id;
+	delete updateBody.owner;
+	delete updateBody.ownerId;
+	if (updateBody.type === ASSETS_TYPE.SavingAccount) {
+		updateBody.balance =
+			getSavingAccountBalance(updateBody.startdate,
+				updateBody.duedate, updateBody.initialDeposit,
+				updateBody.payment);
+	}
 	const assets = await context.prisma.assets.update({
 		where: {
 			id: args.id
@@ -111,7 +136,7 @@ module.exports = {
 	signup,
 	login,
 	deleteUser,
-	addCheckingAccount,
+	createAsset,
 	deleteAsset,
 	updateAsset
 }
