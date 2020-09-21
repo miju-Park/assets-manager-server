@@ -7,7 +7,7 @@ const {
 	CURRENCY,
 	getSavingAccountBalance,
 	getCurrentUSStockPrice,
-	getStockBalance
+	getUSDStockBalance
 } = require('../utils')
 
 async function signup(parent, args, context, info) {
@@ -98,10 +98,9 @@ async function createAsset(parent, args, context) {
 			ticker: args.ticker,
 			currentPrice: price,
 			averagePrice: args.averagePrice,
-			balance: getStockBalance(price, args.count)
+			balance: getUSDStockBalance(price, args.count)
 		}
 	}
-	console.log(assetInfo)
 	const assets = await context.prisma.assets.create({
 		data: {
 			...assetInfo,
@@ -141,6 +140,10 @@ async function updateAsset(parent, args, context) {
 			getSavingAccountBalance(updateBody.startdate,
 				updateBody.duedate, updateBody.initialDeposit,
 				updateBody.payment);
+	} else if (updateBody.type === ASSETS_TYPE.USDStock) {
+		console.log(updateBody)
+		updateBody.currentPrice = await getCurrentUSStockPrice(updateBody.ticker);
+		updateBody.balance = await getUSDStockBalance(updateBody.currentPrice, updateBody.count);
 	}
 	const assets = await context.prisma.assets.update({
 		where: {

@@ -1,5 +1,6 @@
 const {
-	getUserId
+	getUserId,
+	CURRENCY,
 } = require("../utils");
 
 async function assets(parent, args, context, info) {
@@ -16,7 +17,7 @@ async function assets(parent, args, context, info) {
 	return {
 		list: assets,
 		total: assets.reduce((sum, asset) => asset.balance + sum, 0),
-		currency: assets[0].currency
+		currency: CURRENCY.KR
 	}
 }
 module.exports = {

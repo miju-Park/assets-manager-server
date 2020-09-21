@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken')
 const APP_SECRET = 'GraphQL-is-aw3some'
 const moment = require('moment')
 
-const USD_STOCK_URL = 'https://www.alphavantage.co/query'
+const USD_STOCK_URL = 'https://www.alphavantage.co/query';
+const EXCHANGE_RATE_URL = 'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON'
 
 const CURRENCY = Object.freeze({
   KR: 0,
@@ -52,8 +53,26 @@ async function getCurrentUSStockPrice(ticker) {
   return 0;
 }
 
-function getStockBalance(price, count) {
-  return price * count;
+async function getCurrentExchangeRate() {
+  const {
+    data: lists
+  } = await axios(EXCHANGE_RATE_URL, {
+    params: {
+      authkey: 'VF8lFryVkf054uNloFZFNYu1727wgGkV',
+      searchdate: moment().format('YYYYMMDD'),
+      data: 'AP01'
+    }
+  });
+  const usd = lists.find(item => item.cur_unit === 'USD')
+  if (usd.deal_bas_r) {
+    return usd.deal_bas_r.replace(/,/g, '')
+  }
+  return 1;
+}
+
+async function getUSDStockBalance(price, count) {
+  const exchangeRate = await getCurrentExchangeRate();
+  return price * count * exchangeRate;
 }
 
 module.exports = {
@@ -63,5 +82,5 @@ module.exports = {
   getUserId,
   getSavingAccountBalance,
   getCurrentUSStockPrice,
-  getStockBalance
+  getUSDStockBalance
 }

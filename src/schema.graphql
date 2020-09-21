@@ -52,7 +52,7 @@ type Assets {
 
 type AssetsResult {
 	list: [Assets!]!
-	total:Int!
+	total:Float!
 	currency:Int
 }
 
