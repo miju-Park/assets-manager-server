@@ -70,14 +70,14 @@ async function createAsset(parent, args, context) {
 	const userId = getUserId(context);
 	let assetInfo = {
 		type: args.type,
-		bank: args.bank,
 		title: args.title,
-		startdate: args.startdate,
-		duedate: args.duedate,
 	}
 	if (args.type === ASSETS_TYPE.CheckingAccount) {
 		assetInfo = {
 			...assetInfo,
+			bank: args.bank,
+			startdate: args.startdate,
+			duedate: args.duedate,
 			currency: args.currency ? args.currency : CURRENCY.KR,
 			balance: args.balance
 		}
@@ -85,6 +85,9 @@ async function createAsset(parent, args, context) {
 	} else if (args.type === ASSETS_TYPE.SavingAccount) {
 		assetInfo = {
 			...assetInfo,
+			bank: args.bank,
+			startdate: args.startdate,
+			duedate: args.duedate,
 			currency: args.currency ? args.currency : CURRENCY.KR,
 			payment: args.payment,
 			initialDeposit: args.initialDeposit,
@@ -99,7 +102,15 @@ async function createAsset(parent, args, context) {
 			ticker: args.ticker,
 			currentPrice: price,
 			averagePrice: args.averagePrice,
-			balance: getUSDStockBalance(price, args.count)
+			balance: await getUSDStockBalance(price, args.count)
+		}
+	} else if (args.type === ASSETS_TYPE.RealAssets) {
+		assetInfo = {
+			...assetInfo,
+			startdate: args.startdate,
+			duedate: args.duedate,
+			currency: CURRENCY.KR,
+			balance: args.balance
 		}
 	}
 	const assets = await context.prisma.assets.create({

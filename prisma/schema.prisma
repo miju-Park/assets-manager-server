@@ -17,10 +17,10 @@ model User {
 model Assets {
 	id Int @id @default(autoincrement())
   type String
-	bank String
+	bank String @default("")
 	title String
-	startdate DateTime
-	duedate DateTime
+	startdate DateTime @default(now())
+	duedate DateTime @default("9999-12-31T23:59:59.000Z")
   initialDeposit Int @default(0)
   payment Int @default(0)
 	balance Float @default(0)

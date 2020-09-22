@@ -8,7 +8,9 @@ const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
 const User = require('./resolvers/User')
 const Assets = require('./resolvers/Assets')
-
+const {
+	getCurrentExchangeRate
+} = require('./utils')
 const prisma = new PrismaClient();
 
 const resolvers = {
@@ -28,4 +30,7 @@ const server = new GraphQLServer({
 	})
 })
 
-server.start(() => console.log('Server is running on http://localhost:4000'))
+server.start(async () => {
+	console.log('Server is running on http://localhost:4000');
+	await getCurrentExchangeRate();
+})

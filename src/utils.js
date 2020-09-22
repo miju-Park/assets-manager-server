@@ -14,7 +14,8 @@ let exchangeRate = -1;
 const ASSETS_TYPE = Object.freeze({
   CheckingAccount: 'CheckingAccount',
   SavingAccount: 'SavingAccount',
-  USDStock: 'USDStock'
+  USDStock: 'USDStock',
+  RealAssets: 'RealAssets'
 });
 
 
@@ -99,5 +100,6 @@ module.exports = {
   getSavingAccountBalance,
   getCurrentUSStockPrice,
   getUSDStockBalance,
-  renewSettingInfo
+  renewSettingInfo,
+  getCurrentExchangeRate
 }

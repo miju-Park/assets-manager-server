@@ -5,8 +5,8 @@ type Mutation {
   signup(email:String!, password:String!, name:String!):AuthPayload
   login(email:String!, password:String!) :AuthPayload
 	createAsset(
-		type:String!, bank:String!, title:String!, 
-		startdate:DateTime!, duedate:DateTime!, balance:Float,
+		type:String!, bank:String, title:String!, 
+		startdate:DateTime, duedate:DateTime, balance:Float,
 		payment: Int, initialDeposit:Int, currency:Int,
 		count:Int, ticker:String, averagePrice:Float):Assets!
   updateAsset(id:Int!, bank:String, title:String, 
