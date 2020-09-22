@@ -7,7 +7,8 @@ const {
 	CURRENCY,
 	getSavingAccountBalance,
 	getCurrentUSStockPrice,
-	getUSDStockBalance
+	getUSDStockBalance,
+	renewSettingInfo
 } = require('../utils')
 
 async function signup(parent, args, context, info) {
@@ -141,8 +142,6 @@ async function updateAsset(parent, args, context) {
 				updateBody.duedate, updateBody.initialDeposit,
 				updateBody.payment);
 	} else if (updateBody.type === ASSETS_TYPE.USDStock) {
-		console.log(updateBody)
-		updateBody.currentPrice = await getCurrentUSStockPrice(updateBody.ticker);
 		updateBody.balance = await getUSDStockBalance(updateBody.currentPrice, updateBody.count);
 	}
 	const assets = await context.prisma.assets.update({
@@ -155,6 +154,54 @@ async function updateAsset(parent, args, context) {
 	})
 	return assets;
 }
+async function renewAssetInfo(parent, args, context) {
+	const userId = getUserId(context);
+	const myAssets = await context.prisma.assets.findMany({
+		where: {
+			ownerId: userId
+		}
+	});
+	const USDStocks = myAssets.filter(asset => asset.type === ASSETS_TYPE.USDStock);
+	for (const stock of USDStocks) {
+		const currentPrice = await getCurrentUSStockPrice(stock.ticker);
+		const balance = await getUSDStockBalance(currentPrice, stock.count);
+		await context.prisma.assets.update({
+			where: {
+				id: stock.id
+			},
+			data: {
+				currentPrice,
+				balance
+			}
+		})
+	}
+	return true;
+}
+async function updateSetting(parent, args, context) {
+	const mysetting = await context.prisma.setting.findOne({
+		where: {
+			id: args.id
+		}
+	});
+	const info = await renewSettingInfo(mysetting);
+	if (info) {
+		return await context.prisma.setting.upsert({
+			where: {
+				id: args.id
+			},
+			update: {
+				id: args.id,
+				...info
+			},
+			create: {
+				id: args.id,
+				...info
+			}
+		})
+	}
+	return mysetting;
+}
+
 
 module.exports = {
 	signup,
@@ -162,5 +209,7 @@ module.exports = {
 	deleteUser,
 	createAsset,
 	deleteAsset,
-	updateAsset
+	updateAsset,
+	renewAssetInfo,
+	updateSetting
 }

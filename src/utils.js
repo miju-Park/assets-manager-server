@@ -10,6 +10,7 @@ const CURRENCY = Object.freeze({
   KR: 0,
   USD: 1
 });
+let exchangeRate = -1;
 const ASSETS_TYPE = Object.freeze({
   CheckingAccount: 'CheckingAccount',
   SavingAccount: 'SavingAccount',
@@ -65,14 +66,29 @@ async function getCurrentExchangeRate() {
   });
   const usd = lists.find(item => item.cur_unit === 'USD')
   if (usd.deal_bas_r) {
-    return usd.deal_bas_r.replace(/,/g, '')
+    exchangeRate = usd.deal_bas_r.replace(/,/g, '') * 1
+    return exchangeRate;
   }
   return 1;
 }
 
 async function getUSDStockBalance(price, count) {
-  const exchangeRate = await getCurrentExchangeRate();
+  if (exchangeRate === -1) {
+    exchangeRate = await getCurrentExchangeRate();
+  }
   return price * count * exchangeRate;
+}
+
+async function renewSettingInfo(setting) {
+  if (!setting ||
+    moment(setting.updatedAt).format('YYYY-MM-DD') !== moment().format('YYYY-MM-DD')) {
+    const exchangeRate = await getCurrentExchangeRate();
+    return {
+      updatedAt: new Date(),
+      exchangeRate
+    }
+  }
+  return null;
 }
 
 module.exports = {
@@ -82,5 +98,6 @@ module.exports = {
   getUserId,
   getSavingAccountBalance,
   getCurrentUSStockPrice,
-  getUSDStockBalance
+  getUSDStockBalance,
+  renewSettingInfo
 }

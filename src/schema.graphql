@@ -12,11 +12,14 @@ type Mutation {
   updateAsset(id:Int!, bank:String, title:String, 
 		startdate:DateTime, duedate:DateTime, balance:Int, 
 		currency:Int, initialDeposit:Int, payment:Int):Assets!
+		updateSetting(id:Int):Setting!
+		renewAssetInfo(id:Int):Boolean!
 	deleteAsset(id:Int!):Boolean!
 	deleteUser(id:Int!) :Boolean!
 }
 type Query {
   assets(filter:String): AssetsResult!
+	setting: Setting!
 }
 
 type AuthPayload {
@@ -54,5 +57,11 @@ type AssetsResult {
 	list: [Assets!]!
 	total:Float!
 	currency:Int
+}
+
+type Setting {
+	id: ID!
+	exchangeRate: Float!
+	updatedAt: DateTime!
 }
 

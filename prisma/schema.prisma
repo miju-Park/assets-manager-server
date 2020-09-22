@@ -32,3 +32,9 @@ model Assets {
   owner User? @relation(fields:[ownerId], references:[id])
   ownerId  Int?
 }
+
+model Setting {
+  id Int @id
+  exchangeRate Float @default(1)
+  updatedAt DateTime @default(now())
+}

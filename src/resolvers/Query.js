@@ -20,6 +20,11 @@ async function assets(parent, args, context, info) {
 		currency: CURRENCY.KR
 	}
 }
+
+async function setting(parent, args, context, info) {
+	return await context.prisma.setting.findMany();
+}
 module.exports = {
-	assets
+	assets,
+	setting
 }
