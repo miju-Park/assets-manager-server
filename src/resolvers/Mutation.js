@@ -71,6 +71,7 @@ async function createAsset(parent, args, context) {
 	let assetInfo = {
 		type: args.type,
 		title: args.title,
+		currency: args.currency ? args.currency : CURRENCY.KR,
 	}
 	if (args.type === ASSETS_TYPE.CheckingAccount) {
 		assetInfo = {
@@ -110,6 +111,13 @@ async function createAsset(parent, args, context) {
 			startdate: args.startdate,
 			duedate: args.duedate,
 			currency: CURRENCY.KR,
+			balance: args.balance
+		}
+	} else if (args.type === ASSETS_TYPE.CMA) {
+		assetInfo = {
+			...assetInfo,
+			bank: args.bank,
+
 			balance: args.balance
 		}
 	}

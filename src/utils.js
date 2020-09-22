@@ -15,7 +15,8 @@ const ASSETS_TYPE = Object.freeze({
   CheckingAccount: 'CheckingAccount',
   SavingAccount: 'SavingAccount',
   USDStock: 'USDStock',
-  RealAssets: 'RealAssets'
+  RealAssets: 'RealAssets',
+  CMA: 'CMA'
 });
 
 
