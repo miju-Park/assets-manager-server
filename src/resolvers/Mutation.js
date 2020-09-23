@@ -7,8 +7,10 @@ const {
 	CURRENCY,
 	getSavingAccountBalance,
 	getCurrentUSStockPrice,
-	getUSDStockBalance,
-	renewSettingInfo
+	getStockBalance,
+	renewSettingInfo,
+	getCurrentKRStockPrice,
+	isStock
 } = require('../utils')
 
 async function signup(parent, args, context, info) {
@@ -103,7 +105,20 @@ async function createAsset(parent, args, context) {
 			ticker: args.ticker,
 			currentPrice: price,
 			averagePrice: args.averagePrice,
-			balance: await getUSDStockBalance(price, args.count)
+			balance: await getStockBalance(CURRENCY.USD, price, args.count)
+		}
+	} else if (args.type === ASSETS_TYPE.KRStock ||
+		args.type === ASSETS_TYPE.IRP ||
+		args.type === ASSETS_TYPE.PersonalPension) {
+		const price = await getCurrentKRStockPrice(args.ticker)
+		assetInfo = {
+			...assetInfo,
+			currency: CURRENCY.KR,
+			count: args.count,
+			ticker: args.ticker,
+			currentPrice: price,
+			averagePrice: args.averagePrice,
+			balance: await getStockBalance(CURRENCY.KR, price, args.count)
 		}
 	} else if (args.type === ASSETS_TYPE.RealAssets) {
 		assetInfo = {
@@ -160,8 +175,9 @@ async function updateAsset(parent, args, context) {
 			getSavingAccountBalance(updateBody.startdate,
 				updateBody.duedate, updateBody.initialDeposit,
 				updateBody.payment);
-	} else if (updateBody.type === ASSETS_TYPE.USDStock) {
-		updateBody.balance = await getUSDStockBalance(updateBody.currentPrice, updateBody.count);
+	} else if (isStock(updateBody.type)) {
+		updateBody.balance = await getStockBalance(updateBody.currency,
+			updateBody.currentPrice, updateBody.count);
 	}
 	const assets = await context.prisma.assets.update({
 		where: {
@@ -180,10 +196,12 @@ async function renewAssetInfo(parent, args, context) {
 			ownerId: userId
 		}
 	});
-	const USDStocks = myAssets.filter(asset => asset.type === ASSETS_TYPE.USDStock);
-	for (const stock of USDStocks) {
-		const currentPrice = await getCurrentUSStockPrice(stock.ticker);
-		const balance = await getUSDStockBalance(currentPrice, stock.count);
+	const stocks = myAssets.filter(asset => isStock(asset.type));
+	for (const stock of stocks) {
+		const currentPrice = stock.currency === CURRENCY.USD ?
+			await getCurrentUSStockPrice(stock.ticker) :
+			await getCurrentKRStockPrice(stock.ticker)
+		const balance = await getStockBalance(stock.currency, currentPrice, stock.count);
 		await context.prisma.assets.update({
 			where: {
 				id: stock.id
