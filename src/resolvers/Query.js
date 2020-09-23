@@ -7,9 +7,15 @@ async function assets(parent, args, context, info) {
 	const userId = getUserId(context);
 	const filter = args.filter ? {
 		ownerId: userId,
-		type: args.filter
+		type: args.filter,
+		duedate: {
+			gt: new Date()
+		}
 	} : {
-		ownerId: userId
+		ownerId: userId,
+		duedate: {
+			gt: new Date()
+		}
 	}
 	const assets = await context.prisma.assets.findMany({
 		where: filter
