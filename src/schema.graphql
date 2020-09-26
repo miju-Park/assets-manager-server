@@ -19,7 +19,7 @@ type Mutation {
 }
 type Query {
   assets(filter:String): AssetsResult!
-	setting: Setting!
+	setting: [Setting]!
 }
 
 type AuthPayload {
