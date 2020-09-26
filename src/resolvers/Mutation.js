@@ -97,7 +97,9 @@ async function createAsset(parent, args, context) {
 			balance: getSavingAccountBalance(args.startdate, args.duedate, args.initialDeposit, args.payment)
 		}
 	} else if (args.type === ASSETS_TYPE.USDStock) {
-		const price = await getCurrentUSStockPrice(args.ticker)
+		const price = await getCurrentUSStockPrice(args.ticker);
+		const settings = await context.prisma.setting.findMany()
+		const exchangeRate = settings[0].exchangeRate;
 		assetInfo = {
 			...assetInfo,
 			currency: CURRENCY.USD,
@@ -105,7 +107,7 @@ async function createAsset(parent, args, context) {
 			ticker: args.ticker,
 			currentPrice: price,
 			averagePrice: args.averagePrice,
-			balance: await getStockBalance(CURRENCY.USD, price, args.count)
+			balance: await getStockBalance(CURRENCY.USD, price, args.count, exchangeRate)
 		}
 	} else if (args.type === ASSETS_TYPE.KRStock ||
 		args.type === ASSETS_TYPE.IRP ||
@@ -118,7 +120,7 @@ async function createAsset(parent, args, context) {
 			ticker: args.ticker,
 			currentPrice: price,
 			averagePrice: args.averagePrice,
-			balance: await getStockBalance(CURRENCY.KR, price, args.count)
+			balance: await getStockBalance(CURRENCY.KR, price, args.count, 1)
 		}
 	} else if (args.type === ASSETS_TYPE.RealAssets) {
 		assetInfo = {
@@ -176,8 +178,10 @@ async function updateAsset(parent, args, context) {
 				updateBody.duedate, updateBody.initialDeposit,
 				updateBody.payment);
 	} else if (isStock(updateBody.type)) {
+		const settings = await context.prisma.setting.findMany()
+		const exchangeRate = settings[0].exchangeRate;
 		updateBody.balance = await getStockBalance(updateBody.currency,
-			updateBody.currentPrice, updateBody.count);
+			updateBody.currentPrice, updateBody.count, exchangeRate);
 	}
 	const assets = await context.prisma.assets.update({
 		where: {
@@ -197,11 +201,16 @@ async function renewAssetInfo(parent, args, context) {
 		}
 	});
 	const stocks = myAssets.filter(asset => isStock(asset.type));
+	const settings = await context.prisma.setting.findMany()
+	const exchangeRate = settings[0].exchangeRate;
+	await updateSetting(parent, {
+		id: settings[0].id
+	}, context);
 	for (const stock of stocks) {
 		const currentPrice = stock.currency === CURRENCY.USD ?
 			await getCurrentUSStockPrice(stock.ticker) :
 			await getCurrentKRStockPrice(stock.ticker)
-		const balance = await getStockBalance(stock.currency, currentPrice, stock.count);
+		const balance = await getStockBalance(stock.currency, currentPrice, stock.count, exchangeRate);
 		await context.prisma.assets.update({
 			where: {
 				id: stock.id

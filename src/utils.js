@@ -2,7 +2,10 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken')
 const APP_SECRET = 'GraphQL-is-aw3some'
 const moment = require('moment')
-const iconv = require('iconv-lite')
+const iconv = require('iconv-lite');
+const {
+  setting
+} = require('./resolvers/Query');
 
 const USD_STOCK_URL = 'https://www.alphavantage.co/query';
 const EXCHANGE_RATE_URL = 'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON'
@@ -12,7 +15,8 @@ const CURRENCY = Object.freeze({
   KR: 0,
   USD: 1
 });
-let exchangeRate = -1;
+
+
 const ASSETS_TYPE = Object.freeze({
   CheckingAccount: 'CheckingAccount', //예금
   SavingAccount: 'SavingAccount', //적금
@@ -24,6 +28,17 @@ const ASSETS_TYPE = Object.freeze({
   PersonalPension: 'PersonalPension', //개인연금
 
 });
+
+const getNearWeeksday = (formatString) => {
+  const today = moment();
+  const weekday = today.isoWeekday();
+  if (weekday === 6) {
+    return today.subtract(1, 'days').format(formatString)
+  } else if (weekday === 7) {
+    return today.subtract(2, 'days').format(formatString)
+  }
+  return today.format(formatString)
+}
 
 
 function getUserId(context) {
@@ -80,25 +95,24 @@ async function getCurrentExchangeRate() {
   } = await axios(EXCHANGE_RATE_URL, {
     params: {
       authkey: 'VF8lFryVkf054uNloFZFNYu1727wgGkV',
-      searchdate: moment().format('YYYYMMDD'),
+      searchdate: getNearWeeksday('YYYYMMDD'),
       data: 'AP01'
     }
   });
+  if (lists.length === 0) {
+    return 1;
+  }
   const usd = lists.find(item => item.cur_unit === 'USD')
   if (usd.deal_bas_r) {
-    exchangeRate = usd.deal_bas_r.replace(/,/g, '') * 1
+    const exchangeRate = usd.deal_bas_r.replace(/,/g, '') * 1
     return exchangeRate;
   }
-
   return 1;
 }
 
-async function getStockBalance(currency, price, count) {
+async function getStockBalance(currency, price, count, exchangeRate) {
   if (currency === CURRENCY.KR) {
     return price * count
-  }
-  if (exchangeRate === -1) {
-    exchangeRate = await getCurrentExchangeRate();
   }
   return price * count * exchangeRate;
 }
@@ -114,8 +128,11 @@ async function renewSettingInfo(setting) {
   if (!setting ||
     moment(setting.updatedAt).format('YYYY-MM-DD') !== moment().format('YYYY-MM-DD')) {
     const exchangeRate = await getCurrentExchangeRate();
+    if (exchangeRate === 1) {
+      return null;
+    }
     return {
-      updatedAt: new Date(),
+      updatedAt: new Date(getNearWeeksday('YYYY-MM-DD')),
       exchangeRate
     }
   }
