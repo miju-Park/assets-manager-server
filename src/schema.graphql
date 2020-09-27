@@ -19,6 +19,7 @@ type Mutation {
 }
 type Query {
   assets(filter:String): AssetsResult!
+	assetsSummary(filter:String): AssetsSummary!
 	setting: [Setting]!
 }
 
@@ -57,6 +58,17 @@ type AssetsResult {
 	list: [Assets!]!
 	total:Float!
 	currency:Int
+}
+
+type AssetSummary {
+	type:String!
+	total:Float!
+}
+
+type AssetsSummary {
+	total: Float!
+	currency: Int
+	list: [AssetSummary]!
 }
 
 type Setting {

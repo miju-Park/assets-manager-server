@@ -68,7 +68,7 @@ async function getCurrentUSStockPrice(ticker) {
       apikey: 'X78V2FB1CC0PJ7TV'
     }
   });
-  const stockInfo = data['Global Quote']
+  const stockInfo = data['Global Quote'];
   for (const key of Object.keys(stockInfo)) {
     if (key.includes('price')) {
       return parseFloat(stockInfo[key])
