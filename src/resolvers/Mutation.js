@@ -112,7 +112,7 @@ async function createAsset(parent, args, context) {
 	} else if (args.type === ASSETS_TYPE.KRStock ||
 		args.type === ASSETS_TYPE.IRP ||
 		args.type === ASSETS_TYPE.PersonalPension) {
-		const price = await getCurrentKRStockPrice(args.ticker)
+		const price = args.ticker !== '' ? await getCurrentKRStockPrice(args.ticker) : args.averagePrice
 		assetInfo = {
 			...assetInfo,
 			currency: CURRENCY.KR,

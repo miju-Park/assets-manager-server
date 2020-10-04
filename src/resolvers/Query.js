@@ -17,7 +17,7 @@ async function assets(parent, args, context, info) {
 			in: ['CheckingAccount', 'SavingAccount', 'USDStock', 'RealAssets', 'CMA', 'KRStock']
 		}
 	} else if (args.filter) {
-		filter.type = args.filte;
+		filter.type = args.filter;
 	}
 	const assets = await context.prisma.assets.findMany({
 		where: filter
@@ -47,10 +47,9 @@ async function assetsSummary(parent, args, context) {
 		WHERE ownerId = ${userId} AND duedate > ${moment().format('YYYY-MM-DD')} group by type`)
 	}
 
-
 	return {
 		list: result,
-		total: result.reduce((sum, asset) => asset.total + sum, 0),
+		total: result.reduce((sum, asset) => parseInt(asset.total) + sum, 0),
 		currency: CURRENCY.KR
 	}
 }
