@@ -97,7 +97,7 @@ async function createAsset(parent, args, context) {
 			balance: getSavingAccountBalance(args.startdate, args.duedate, args.initialDeposit, args.payment)
 		}
 	} else if (args.type === ASSETS_TYPE.USDStock) {
-		const price = await getCurrentUSStockPrice(args.ticker);
+		const price = args.ticker !== '' ? await getCurrentUSStockPrice(args.ticker) : args.averagePrice;
 		const settings = await context.prisma.setting.findMany()
 		const exchangeRate = settings[0].exchangeRate;
 		assetInfo = {
@@ -208,13 +208,14 @@ async function renewAssetInfo(parent, args, context) {
 	}, context);
 	for (const stock of stocks) {
 		let currentPrice = stock.averagePrice;
-		if (stock.currency === CURRENCY.USD) {
-			currentPrice = await getCurrentUSStockPrice(stock.ticker)
-		} else {
-			if (stock.ticker !== '') {
+		if (stock.ticker !== '') {
+			if (stock.currency === CURRENCY.USD) {
+				currentPrice = await getCurrentUSStockPrice(stock.ticker)
+			} else {
 				currentPrice = await getCurrentKRStockPrice(stock.ticker)
 			}
 		}
+
 		const balance = await getStockBalance(stock.currency, currentPrice, stock.count, exchangeRate);
 		await context.prisma.assets.update({
 			where: {

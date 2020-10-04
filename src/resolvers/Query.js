@@ -16,6 +16,10 @@ async function assets(parent, args, context, info) {
 		filter.type = {
 			in: ['CheckingAccount', 'SavingAccount', 'USDStock', 'RealAssets', 'CMA', 'KRStock']
 		}
+	} else if (args.filter.includes(',')) {
+		filter.type = {
+			in: args.filter.split(',')
+		}
 	} else if (args.filter) {
 		filter.type = args.filter;
 	}
