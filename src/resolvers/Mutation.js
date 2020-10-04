@@ -207,9 +207,14 @@ async function renewAssetInfo(parent, args, context) {
 		id: settings[0].id
 	}, context);
 	for (const stock of stocks) {
-		const currentPrice = stock.currency === CURRENCY.USD ?
-			await getCurrentUSStockPrice(stock.ticker) :
-			await getCurrentKRStockPrice(stock.ticker)
+		let currentPrice = stock.averagePrice;
+		if (stock.currency === CURRENCY.USD) {
+			currentPrice = await getCurrentUSStockPrice(stock.ticker)
+		} else {
+			if (stock.ticker !== '') {
+				currentPrice = await getCurrentKRStockPrice(stock.ticker)
+			}
+		}
 		const balance = await getStockBalance(stock.currency, currentPrice, stock.count, exchangeRate);
 		await context.prisma.assets.update({
 			where: {
