@@ -11,7 +11,8 @@ type Mutation {
 		count:Int, ticker:String, averagePrice:Float):Assets!
   updateAsset(id:Int!, bank:String, title:String, 
 		startdate:DateTime, duedate:DateTime, balance:Int, 
-		currency:Int, initialDeposit:Int, payment:Int):Assets!
+		currency:Int, initialDeposit:Int, payment:Int,
+			count:Int, ticker:String, averagePrice:Float):Assets!
 		updateSetting(id:Int):Setting!
 		renewAssetInfo(id:Int):Boolean!
 	deleteAsset(id:Int!):Boolean!
