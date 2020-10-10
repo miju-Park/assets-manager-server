@@ -7,7 +7,7 @@ const {
   setting
 } = require('./resolvers/Query');
 
-const USD_STOCK_URL = 'https://www.alphavantage.co/query';
+const USD_STOCK_URL = 'https://finnhub.io/api/v1/quote'
 const EXCHANGE_RATE_URL = 'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON'
 const NAVER_FINANCE_URL = 'https://polling.finance.naver.com/api/realtime.nhn'
 
@@ -63,18 +63,12 @@ async function getCurrentUSStockPrice(ticker) {
     data
   } = await axios(USD_STOCK_URL, {
     params: {
-      function: 'GLOBAL_QUOTE',
       symbol: ticker,
-      apikey: 'X78V2FB1CC0PJ7TV'
+      token: 'bu0meiv48v6rj02vkh9g'
     }
   });
-  const stockInfo = data['Global Quote'];
-  for (const key of Object.keys(stockInfo)) {
-    if (key.includes('price')) {
-      return parseFloat(stockInfo[key])
-    }
-  }
-  return 0;
+  return parseFloat(data.c) || 0;
+
 }
 async function getCurrentKRStockPrice(ticker) {
   const {

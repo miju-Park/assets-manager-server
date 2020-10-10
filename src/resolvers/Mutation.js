@@ -180,6 +180,9 @@ async function updateAsset(parent, args, context) {
 	} else if (isStock(updateBody.type)) {
 		const settings = await context.prisma.setting.findMany()
 		const exchangeRate = settings[0].exchangeRate;
+		if (updateBody.ticker === '') {
+			updateBody.currentPrice = updateBody.averagePrice;
+		}
 		updateBody.balance = await getStockBalance(updateBody.currency,
 			updateBody.currentPrice, updateBody.count, exchangeRate);
 	}
@@ -214,6 +217,8 @@ async function renewAssetInfo(parent, args, context) {
 			} else {
 				currentPrice = await getCurrentKRStockPrice(stock.ticker)
 			}
+		} else {
+			currentPrice = stock.averagePrice;
 		}
 
 		const balance = await getStockBalance(stock.currency, currentPrice, stock.count, exchangeRate);
